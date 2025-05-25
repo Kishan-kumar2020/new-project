@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+.previewPageTransition {
+    position: absolute;
+    transform: translateX(70%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.editPageTransition {
+    opacity: 1;
+    position: relative;
+    transform: translateX(-50%);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
