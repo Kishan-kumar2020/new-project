@@ -17,6 +17,7 @@
 - Install axios
 - CORS - install cors in backend => add middleware to with configuration: origin, credentials: true
 - Whenever you're making API call so pass => {withCredentials: true}
+- - withCredentials: true is for cookies and that is outside header, for the auth token we can use Authorization: `Bearer ${token}`
 - Install react-redux + @reduxjs/toolkit
 - configureStore => Provider => createSlice => add reducer to store
 - Add redux devtools in chrome

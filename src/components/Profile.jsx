@@ -2,30 +2,46 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice';
+import { BASE_URL } from '../utils/constants';
 
 const Profile = () => {
-
-  // FROM Line 6 to 15 this is the code to preview
   const [isEditing, setIsEditing] = useState(false);
-  // const [profile, setProfile] = useState({
-  //   name: "John Doe",
-  //   email: "johndoe@example.com",
-  //   about: "A passionate developer who loves clean UI and solving problems with code."
-  // });
+
   const user = useSelector((state) => state.user);
+  console.log("From Profile", user);
   const dispatch = useDispatch();
-  
+
   const [formData, setFormData] = useState({ ...user });
+  const { email, ...updateData } = formData;
 
-  const { name, email, about } = formData;
-  
-  /**
-   * This is the way to make use of our store
-    
+  const { name, about } = formData;
 
-   * We don't require the additional state only formData we require
+  const handleSave = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(BASE_URL + 'user/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ ...updateData, photoURL: 'https://search.brave.com/images?q=Image&context=W3sic3JjIjoiaHR0cHM6Ly91cGxvYWQud2lraW1lZGlhLm9yZy93aWtpcGVkaWEvY29tbW9ucy90aHVtYi9iL2I2L0ltYWdlX2NyZWF0ZWRfd2l0aF9hX21vYmlsZV9waG9uZS5wbmcvOTYwcHgtSW1hZ2VfY3JlYXRlZF93aXRoX2FfbW9iaWxlX3Bob25lLnBuZyIsInRleHQiOiJJbWFnZSAtIFdpa2lwZWRpYSIsInBhZ2VfdXJsIjoiaHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvSW1hZ2UifV0%3D&sig=306c27ef4f455c2b8010b8c6435188f6ea20f8355d967ae6af2dd58619dafcf1&nonce=7277f3a71dd226c4117c53312799532c' })
+      });
 
-   */
+      const data = await res.json();
+      console.log(data);
+
+      if (res.ok) {
+        setIsEditing(false);
+        dispatch(addUser(data));
+      } else {
+        console.error('Update failed:', data.message);
+      }
+    } catch (err) {
+      console.error('Error:', err);
+    }
+  };
+
 
   return (
     <div className="relative w-full max-w-6xl h-full overflow-hidden mx-auto my-10">
@@ -44,7 +60,7 @@ const Profile = () => {
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
           </div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="text-gray-400 text-sm">Email</label>
             <input
               type="email"
@@ -52,7 +68,7 @@ const Profile = () => {
               value={email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
-          </div>
+          </div> */}
           <div className="mb-6">
             <label className="text-gray-400 text-sm">About</label>
             <textarea
@@ -63,15 +79,8 @@ const Profile = () => {
             />
           </div>
           <button
-            onClick={() => {
-              // setProfile({ ...formData });
-              setIsEditing(false)
-              dispatch(addUser(formData));
-              /**
-               * If we use store
-               */
-            }}
-            className={`w-full text-white py-2 rounded bg-green-600 hover:bg-green-700 transition duration-300 ease-in-out opacity-100 ${isEditing ? 'opacity-100' : 'opacity-0'} hover:duration-200 hover:ease-in-out`} >
+            onClick={handleSave}
+            className={`w-full text-white py-2 rounded bg-green-600 hover:bg-green-700 transition duration-300 ease-in-out opacity-100 ${isEditing ? 'opacity-100' : 'opacity-0'} hover:duration-200 hover:ease-in-out cursor-pointer`} >
             Save
           </button>
         </div>
@@ -83,10 +92,10 @@ const Profile = () => {
               <p className="text-gray-400 text-sm">Name</p>
               <p className="font-medium">{name}</p>
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <p className="text-gray-400 text-sm">Email</p>
               <p className="font-medium">{email}</p>
-            </div>
+            </div> */}
             <div className="mb-6">
               <p className="text-gray-400 text-sm">About</p>
               <p>{about}</p>
@@ -95,10 +104,9 @@ const Profile = () => {
           <button
             onClick={() => {
               setIsEditing(true);
-              setFormData({ ...user });
             }
             }
-            className={`w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition duration-300 ${isEditing ? 'opacity-0' : ''}`}
+            className={`w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition duration-300 ${isEditing ? 'opacity-0' : ''} cursor-pointer`}
           >
             Edit Profile
           </button>
