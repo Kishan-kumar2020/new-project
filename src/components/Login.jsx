@@ -7,73 +7,58 @@ import axios from 'axios';
 
 const Login = () => {
 
-    const [userLogin, setUserLogin] = useState({
-        name: 'John Doe',
+    const [form, setForm] = useState({
+        name: '',
         email: 'johndoe@example.com',
         password: 'John@123',
         about: 'This is the default about for the user!',
-    })
+    });
 
-    const [error, setError] = useState('');
     const [isSignUp, setIsSignUp] = useState(false);
-
-    const { name, email, password } = userLogin;
-    const navigate = useNavigate();
+    const [error, setError] = useState('');
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const handleSignUp = async () => {
-        try {
-            const res = await axios.post(BASE_URL + 'auth/signup', userLogin, {
-                headers: { 'Content-Type': 'application/json' },
-            });
-            const data = res.data;
-            console.log(data);
-            if (res.status === 200) {
-                localStorage.setItem('token', data.token);
-            } else {
-                setError(data.message || "Error Occurred");
-            }
-        }
-        catch (err) {
-            console.log(err);
-            if (err.response && err.response.data && err.response.data.message) {
-                setError(err.response.data.message);
-            } else {
-                setError("Error Occurred");
-            }
-        }
+    const { name, email, password, about } = form;
+
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    const handleAuth = async () => {
+        const url = isSignUp ? 'signup' : 'login';
+        const payload = isSignUp ? form : { email: email, password: password };
 
-    const handleSubmit = async () => {
         try {
-            const res = await axios.post(BASE_URL + 'auth/login', {
-                email,
-                password
-            }, {
+            const { data, status } = await axios.post(`${BASE_URL}auth/${url}`, payload, {
                 headers: { 'Content-Type': 'application/json' },
             });
-            const data = res.data;
-            console.log(data);
-            if (res.status === 200) {
+
+            if (status === 200 || status === 201) {
                 localStorage.setItem('token', data.token);
-                dispatch(addUser(data.user));
-                navigate('/feed', { replace: true });
+                if (!isSignUp) {
+                    dispatch(addUser(data.user));
+                    navigate('/feed', { replace: true });
+                } else {
+                    setIsSignUp(false);
+                }
+            } else {
+                setError(data.message || 'unexpected Error')
             }
-            else {
-                setError("Error Occured");
-            }
-        }
-        catch (err) {
+        } catch (err) {
             console.log(err);
-            setError("Error Occured");
+            const msg = err?.response?.data?.message || 'Server Error';
+            setError(msg);
         }
-    }
+    };
 
     return (
         <div className="card bg-base-200 w-96 shadow-sm self-center">
             <div className="card-body">
                 <h1 className="text-2xl text-center">{isSignUp ? 'SignUp' : 'Login'}</h1>
+
+                {error && <p className='text-red-500 text-sm text-center mb-2'>{error}</p>}
+
                 {isSignUp && <label className="w-full input validator my-2">
                     <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <g
@@ -87,7 +72,7 @@ const Login = () => {
                             <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
                         </g>
                     </svg>
-                    <input type="text" placeholder="Name" required value={name} onChange={(e) => setUserLogin({ ...userLogin, name: e.target.value })} />
+                    <input name='name' type="text" placeholder="Name" required value={name} onChange={handleChange} />
                 </label>}
                 <label className="w-full input validator my-2">
                     <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -102,7 +87,7 @@ const Login = () => {
                             <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
                         </g>
                     </svg>
-                    <input type="email" placeholder="Email" required value={email} onChange={(e) => setUserLogin({ ...userLogin, email: e.target.value })} />
+                    <input name='email' type="email" placeholder="Email" required value={email} onChange={handleChange} />
                 </label>
                 <label className="w-full input validator my-2">
                     <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -120,25 +105,32 @@ const Login = () => {
                         </g>
                     </svg>
                     <input
+                        name='password'
                         type="password"
                         required
                         placeholder="Password"
                         value={password}
-                        onChange={(e) => setUserLogin({ ...userLogin, password: e.target.value })}
+                        onChange={handleChange}
                         // minlength="8"
                         // pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                         title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
                     />
                 </label>
-                {!isSignUp && <div className="card-actions justify-center">
-                    <button onClick={handleSubmit} className="btn btn-block btn-primary">Login</button>
-                </div>}
-                {/* If no user let's sign up */}
-                {isSignUp ? <div className="card-actions justify-center my-4">
-                    <button onClick={handleSignUp} className="btn btn-block btn-accent">SignUp</button>
-                </div> : <div className="card-actions justify-center my-4">
-                    <button onClick={() => setIsSignUp(true)} className="btn btn-block btn-accent">Not! Signed up?</button>
-                </div>}
+                <div className='card-actions mt-4'>
+                    <button
+                        onClick={handleAuth}
+                        className={`btn btn-block ${isSignUp ? 'btn-accent' : 'btn-primary'}`}>
+                        {isSignUp ? 'Sign Up' : 'Login'}
+                    </button>
+                </div>
+
+                <div className='card-actions mt-2'>
+                    <button
+                        onClick={() => setIsSignUp(!isSignUp)}
+                        className='btn btn-block btn-secondary'>
+                        {isSignUp ? 'Already have an account' : 'Not signed up yet?'}
+                    </button>
+                </div>
             </div>
         </div>
     )
