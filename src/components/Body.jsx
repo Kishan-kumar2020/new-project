@@ -40,13 +40,11 @@ const Body = () => {
     }, []);
 
     return (
-        <>
+        <div className="grid h-screen grid-rows-[auto_1fr_auto]">
             <Navbar />
-            <div className="flex flex-col">
-                <div className="flex-1"><Outlet /></div>
-                <Footer />
-            </div>
-        </>
+            <main className="p-4 flex justify-center items-start overflow-auto"><Outlet /></main>
+            <Footer />
+        </div>
     );
 };
 

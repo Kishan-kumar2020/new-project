@@ -44,7 +44,7 @@ const Profile = () => {
 
 
   return (
-    <div className="relative w-full max-w-6xl h-full overflow-hidden mx-auto my-10">
+    <div className="relative w-full max-w-6xl overflow-hidden mx-auto self-center">
       <div
         className="flex justify-center w-full gap-1 h-full relative"
       >

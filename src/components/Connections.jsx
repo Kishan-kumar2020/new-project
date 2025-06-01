@@ -2,7 +2,7 @@ import React from 'react'
 
 const Connections = () => {
   return (
-    <div className="max-w-md mx-auto my-4 bg-base-200 shadow-md rounded-lg p-4 flex items-start gap-4">
+    <div className="max-w-md mx-auto bg-base-200 shadow-md rounded-lg p-4 flex items-start gap-4">
       <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
         <img
           src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"

@@ -14,10 +14,10 @@ const Navbar = () => {
         navigate('/login', { replace: true })
     }
     return (
-        <div>
+        <header>
             <div className="navbar bg-base-100 shadow-sm">
                 <div className="flex-1">
-                    <Link to="/home" className="btn btn-ghost text-xl">DevTinder-Web</Link>
+                    <Link to="/feed" className="btn btn-ghost text-xl">DevTinder-Web</Link>
                 </div>
                 {user && <div className="flex-none">
                     <div className="dropdown dropdown-end">
@@ -48,7 +48,7 @@ const Navbar = () => {
                     </div>
                 </div>}
             </div>
-        </div>
+        </header>
     )
 }
 
