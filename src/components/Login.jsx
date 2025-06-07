@@ -11,11 +11,13 @@ const Login = () => {
         name: '',
         email: 'johndoe@example.com',
         password: 'John@123',
-        about: 'This is the default about for the user!',
+        about: '',
     });
 
     const [isSignUp, setIsSignUp] = useState(false);
     const [error, setError] = useState('');
+    const [message, setMessage] = useState('');
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -36,19 +38,20 @@ const Login = () => {
 
             if (status === 200 || status === 201) {
                 localStorage.setItem('token', data.token);
+                console.log(data);
                 if (!isSignUp) {
                     dispatch(addUser(data.user));
                     navigate('/feed', { replace: true });
                 } else {
                     setIsSignUp(false);
+                    setMessage(data.message);
                 }
             } else {
                 setError(data.message || 'unexpected Error')
             }
         } catch (err) {
-            console.log(err);
-            const msg = err?.response?.data?.message || 'Server Error';
-            setError(msg);
+            const errMsg = err?.response?.data?.errors ? err?.response?.data?.errors[0]?.message : err?.response?.data?.message;
+            setError(errMsg);
         }
     };
 
@@ -57,7 +60,7 @@ const Login = () => {
             <div className="card-body">
                 <h1 className="text-2xl text-center">{isSignUp ? 'SignUp' : 'Login'}</h1>
 
-                {error && <p className='text-red-500 text-sm text-center mb-2'>{error}</p>}
+                <p className={`${error ? 'text-red-500' : 'text-green-500'} text-sm text-center mb-2`}>{error ? error : message}</p>
 
                 {isSignUp && <label className="w-full input validator my-2">
                     <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -89,6 +92,32 @@ const Login = () => {
                     </svg>
                     <input name='email' type="email" placeholder="Email" required value={email} onChange={handleChange} />
                 </label>
+                {isSignUp &&
+                    <>
+                        <div className="relative w-full">
+                            <textarea
+                                id="about"
+                                name="about"
+                                rows={4}
+                                maxLength={3000}
+                                placeholder="Tell us a little about yourself..."
+                                className="textarea textarea-bordered w-full resize-none pr-10"
+                                value={about}
+                                onChange={handleChange}
+                            />
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-5 h-5 text-gray-400 absolute right-3 top-3 pointer-events-none"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 11l5-5 3.536 3.536-5 5H9v-3.536z" />
+                            </svg>
+                        </div>
+                    </>
+                }
                 <label className="w-full input validator my-2">
                     <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <g
@@ -126,7 +155,10 @@ const Login = () => {
 
                 <div className='card-actions mt-2'>
                     <button
-                        onClick={() => setIsSignUp(!isSignUp)}
+                        onClick={() => {
+                            setIsSignUp(!isSignUp);
+                            setError('');
+                        }}
                         className='btn btn-block btn-secondary'>
                         {isSignUp ? 'Already have an account' : 'Not signed up yet?'}
                     </button>

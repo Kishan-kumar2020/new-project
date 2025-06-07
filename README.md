@@ -27,6 +27,16 @@
 - You should not be access other routes without login
 - If token is not present, redirect user to login page
 
+# video 3
+- Not able to access the routes with login
+
+# video 4
+
+# video 5
+
+# Additionals
+- Create a Loader Component to use across API calls
+- Added a default user svg [utils -> icons -> UserIcon.svg]
 
 
 
@@ -45,5 +55,8 @@
 
 
 # TODO
-FOR COMMIT Login component code refactor
-Handle the error message
+Try to add gender in the backend
+Add the other fields while signing up - Age, PhotoURL, gender
+
+
+
