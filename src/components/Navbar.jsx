@@ -1,18 +1,34 @@
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios';
 import { removeUser } from '../utils/userSlice';
+import { BASE_URL } from '../utils/constants';
 
 const Navbar = () => {
     const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        dispatch(removeUser());
-        navigate('/login', { replace: true })
+    const handleLogout = async () => {
+        try {
+            const res = await axios.post(BASE_URL + 'auth/logout', {}, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                withCredentials: true,
+            });
+            if(res?.data?.success) {
+                navigate('/login', { replace: true });
+                dispatch(removeUser());
+            } else {
+                console.log(res?.data?.message);
+            }
+            console.log(res);
+        } catch (err) {
+            console.log(err);
+        }
     }
+
     return (
         <header>
             <div className="navbar bg-base-100 shadow-sm">

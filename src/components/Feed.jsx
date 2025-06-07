@@ -1,5 +1,5 @@
+import { useEffect, useState } from 'react'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
 import { BASE_URL, USER_ICON_PATH } from '../utils/constants';
 
 const Feed = () => {
@@ -8,15 +8,15 @@ const Feed = () => {
   const [currentIdx, setCurrentIdx] = useState(0);
 
   const fetchConnections = async () => {
-    const token = localStorage.getItem('token');
     try {
       const { data } = await axios.get(`${BASE_URL}user/feed`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
+        withCredentials: true,
       });
       setFeed(data.users);
-      console.log('From get', data.users);
+      console.log('From feed', data.users);
     } catch (err) {
       console.log(err.response?.data?.message);
     }

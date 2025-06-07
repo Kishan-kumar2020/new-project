@@ -1,11 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// const userInitialState = {
-//     name: "John Doe",
-//     email: "johndoe@example.com",
-//     about: "A passionate developer who loves clean UI and solving problems with code."
-// }
-
 const userInitialState = null;
 
 const userSlice = createSlice({

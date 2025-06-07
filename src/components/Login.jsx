@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { addUser } from '../utils/userSlice';
 import { BASE_URL } from '../utils/constants';
-import axios from 'axios';
 
 const Login = () => {
 
@@ -34,10 +34,10 @@ const Login = () => {
         try {
             const { data, status } = await axios.post(`${BASE_URL}auth/${url}`, payload, {
                 headers: { 'Content-Type': 'application/json' },
+                withCredentials: true, // this is to set the Cookies
             });
 
             if (status === 200 || status === 201) {
-                localStorage.setItem('token', data.token);
                 console.log(data);
                 if (!isSignUp) {
                     dispatch(addUser(data.user));
