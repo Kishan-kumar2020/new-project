@@ -3,27 +3,27 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import { removeUser } from '../utils/userSlice';
 import { BASE_URL } from '../utils/constants';
+import { removeFeed } from '../utils/feedSlice';
+import { removeRequests } from '../utils/requestSlice';
 
 const Navbar = () => {
     const user = useSelector((state) => state.user);
+    const requestsRecieved = useSelector((state) => state.requests);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
-            const res = await axios.post(BASE_URL + 'auth/logout', {}, {
+             await axios.post(BASE_URL + 'auth/logout', {}, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 withCredentials: true,
             });
-            if(res?.data?.success) {
-                navigate('/login', { replace: true });
-                dispatch(removeUser());
-            } else {
-                console.log(res?.data?.message);
-            }
-            console.log(res);
+            navigate('/login', { replace: true });
+            dispatch(removeUser());
+            dispatch(removeFeed());
+            dispatch(removeRequests());
         } catch (err) {
             console.log(err);
         }
@@ -55,7 +55,7 @@ const Navbar = () => {
                             </li>
                             <li><Link to='/connections'>Connections</Link></li>
                             <li><Link to='/requests'>Requests
-                                <span className="badge">10+</span>
+                                {requestsRecieved && <span className="badge">{requestsRecieved.length}</span>}
                             </Link></li>
                             <li>
                                 <button onClick={handleLogout}>Logout</button>

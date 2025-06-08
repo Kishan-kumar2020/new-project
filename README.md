@@ -29,6 +29,7 @@
 
 # video 3
 - Not able to access the routes with login
+- Edit Profile
 
 # video 4
 

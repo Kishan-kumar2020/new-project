@@ -9,8 +9,8 @@ const Login = () => {
 
     const [form, setForm] = useState({
         name: '',
-        email: 'johndoe@example.com',
-        password: 'John@123',
+        email: 'rahulgandhi@example.com',
+        password: 'Rahul@123',
         about: '',
     });
 

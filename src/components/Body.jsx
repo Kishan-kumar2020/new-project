@@ -36,7 +36,7 @@ const Body = () => {
     return (
         <div className="grid h-screen grid-rows-[auto_1fr_auto]">
             <Navbar />
-            <main className="p-4 flex justify-center items-start overflow-auto"><Outlet /></main>
+            <main className="p-4 flex justify-center items-start"><Outlet /></main>
             <Footer />
         </div>
     );
