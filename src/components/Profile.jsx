@@ -7,6 +7,7 @@ import axios from 'axios';
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [error, setError] = useState('');
 
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const Profile = () => {
   }, [user]);
 
   const { email, ...updateData } = formData;
-  const { name, about, photoURL } = formData;
+  const { name, about, photoURL, age, gender } = updateData;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,16 +39,16 @@ const Profile = () => {
         withCredentials: true,
       });
 
-      console.log(res.data);
-
       if (res) {
+        setError('');
         setIsEditing(false);
         dispatch(addUser(res.data?.user));
       } else {
-        console.error('Update failed:', res.data?.message);
+        setError(res.data?.message);
       }
     } catch (err) {
-      console.log('Err: ', err);
+      const errorOccured = err.response?.data?.errors ? err.response?.data?.errors[0]?.message : err.response?.data?.message;
+      setError(errorOccured);
     }
   }
 
@@ -60,6 +61,7 @@ const Profile = () => {
         {/* Profile Edit Form */}
         <div className={`w-1/2 h-full px-6 pt-4 pb-8 bg-base-200 shadow-md border-2 border-blue-950 rounded-lg mx-4 opacity-0 transition duration-300 ease-in-out ${isEditing ? 'editPageTransition' : ''}`}>
           <h2 className="text-2xl font-semibold mb-4 text-center">Edit Profile</h2>
+          <p className='text-red-500'>{error}</p>
           <div className="mb-4">
             <label className="text-gray-400 text-sm">Name</label>
             <input
@@ -83,20 +85,23 @@ const Profile = () => {
           <div className="mb-4">
             <label className="text-gray-400 text-sm">Gender</label>
             <br />
-            <select name='gender' className='w-full mt-2 border rounded p-2'>
+            <select name='gender' value={gender} onChange={handleChange} className='w-full mt-2 border rounded p-2'>
               <option className='bg-base-300' value='male'>male</option>
               <option className='bg-base-300' value='female'>female</option>
-              <option className='bg-base-300' value='others'>others</option>
-              <option className='bg-base-300' selected value='prefer_no_to_say'>Prefer no to say</option>
+              <option className='bg-base-300' value='other'>others</option>
+              <option className='bg-base-300' value='prefer_not_to_say'>Prefer no to say</option>
             </select>
           </div>
           <div className="mb-4">
             <label className="text-gray-400 text-sm">Age</label>
             <input
+              name='age'
               type="number"
               className="w-full mt-1 border border-gray-300 rounded px-3 py-2"
-            // value={age}
-            // onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+              value={age}
+              min='18'
+              max='100'
+              onChange={handleChange}
             />
           </div>
           <div className="mb-6">
@@ -133,8 +138,7 @@ const Profile = () => {
               <p className="font-medium">{name}</p>
             </div>
             <div className="mb-4">
-              {/* <p className="font-medium">{age, gender}</p> */}
-              <p className="font-medium">26, male</p>
+              <p className="font-medium">{age}, {gender}</p>
             </div>
             <div className="mb-6">
               <p>{about}</p>
@@ -143,6 +147,7 @@ const Profile = () => {
           <button
             onClick={() => {
               setIsEditing(true);
+              setError('')
             }
             }
             className={`w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition duration-300 ${isEditing ? 'opacity-0' : ''} cursor-pointer`}

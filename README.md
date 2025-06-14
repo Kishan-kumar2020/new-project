@@ -56,5 +56,3 @@
 
 
 # TODO
-Try to add gender in the backend
-Add the other fields while signing up - Age, gender

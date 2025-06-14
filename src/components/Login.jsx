@@ -13,6 +13,8 @@ const Login = () => {
         password: 'Rahul@123',
         about: '',
         photoURL: '',
+        age: '',
+        gender: '',
     });
 
     const [isSignUp, setIsSignUp] = useState(false);
@@ -22,7 +24,7 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { name, email, photoURL, about, password } = form;
+    const { name, email, photoURL, about, age, gender, password } = form;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,8 +37,7 @@ const Login = () => {
 
         try {
             const { data, status } = await axios.post(`${BASE_URL}auth/${url}`, payload, {
-                headers: { 'Content-Type': 'application/json' },
-                withCredentials: true, // this is to set the Cookies
+                withCredentials: true,
             });
 
             if (status === 200 || status === 201) {
@@ -46,10 +47,11 @@ const Login = () => {
                     navigate('/feed', { replace: true });
                 } else {
                     setIsSignUp(false);
+                    setError('');
                     setMessage(data.message);
                 }
             } else {
-                setError(data.message || 'unexpected Error')
+                setError(data.message || 'unexpected Error');
             }
         } catch (err) {
             const errMsg = err?.response?.data?.errors ? err?.response?.data?.errors[0]?.message : err?.response?.data?.message;
@@ -96,6 +98,21 @@ const Login = () => {
                 </label>
                 {isSignUp &&
                     <>
+                        <label className="w-full input validator my-2">
+                            <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <g
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeWidth="2.5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                >
+                                    <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                                </g>
+                            </svg>
+                            <input name='age' type="number" min="18" max="100" placeholder="Age" required value={age} onChange={handleChange} />
+                        </label>
                         <div className="relative w-full">
                             <textarea
                                 id="about"
