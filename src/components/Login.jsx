@@ -12,6 +12,7 @@ const Login = () => {
         email: 'rahulgandhi@example.com',
         password: 'Rahul@123',
         about: '',
+        photoURL: '',
     });
 
     const [isSignUp, setIsSignUp] = useState(false);
@@ -21,10 +22,11 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { name, email, password, about } = form;
+    const { name, email, photoURL, about, password } = form;
 
     const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setForm({ ...form, [name]: value });
     };
 
     const handleAuth = async () => {
@@ -116,6 +118,28 @@ const Login = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 11l5-5 3.536 3.536-5 5H9v-3.536z" />
                             </svg>
                         </div>
+                        <label className="w-full input validator my-2">
+                            <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <g
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeWidth="2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                >
+                                    <path d="M4 7h16l-1.5-2h-13L4 7zM21 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7m3 0l2-3h8l2 3"></path>
+                                    <circle cx="12" cy="13" r="3" />
+                                </g>
+                            </svg>
+                            <input
+                                name="photoURL"
+                                type="url"
+                                placeholder="Photo URL"
+                                required
+                                value={photoURL}
+                                onChange={handleChange}
+                            />
+                        </label>
                     </>
                 }
                 <label className="w-full input validator my-2">
