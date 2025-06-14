@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios'
-import { addFeed } from '../utils/feedSlice';
+import { addFeed } from '../utils/slices/feedSlice';
 import { BASE_URL, USER_ICON_PATH } from '../utils/constants';
 
 const Feed = () => {

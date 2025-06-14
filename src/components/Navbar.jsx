@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
-import { removeUser } from '../utils/userSlice';
+import { removeUser } from '../utils/slices/userSlice';
+import { removeFeed } from '../utils/slices/feedSlice';
+import { removeRequests } from '../utils/slices/requestSlice';
 import { BASE_URL } from '../utils/constants';
-import { removeFeed } from '../utils/feedSlice';
-import { removeRequests } from '../utils/requestSlice';
+import { removeConnections } from '../utils/slices/connectionSlice';
 
 const Navbar = () => {
     const user = useSelector((state) => state.user);
@@ -24,6 +25,7 @@ const Navbar = () => {
             dispatch(removeUser());
             dispatch(removeFeed());
             dispatch(removeRequests());
+            dispatch(removeConnections());
         } catch (err) {
             console.log(err);
         }
@@ -56,7 +58,7 @@ const Navbar = () => {
                             </li>
                             <li><Link to='/connections'>Connections</Link></li>
                             <li><Link to='/requests'>Requests
-                                {requestsRecieved && <span className="badge">{requestsRecieved.length}</span>}
+                                {requestsRecieved && <span className="badge text-[0.7875rem]">{requestsRecieved.length}</span>}
                             </Link></li>
                             <li>
                                 <button onClick={handleLogout}>Logout</button>

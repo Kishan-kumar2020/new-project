@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { addUser } from '../utils/userSlice';
+import { addUser } from '../utils/slices/userSlice';
 import { BASE_URL } from '../utils/constants';
 
 const Login = () => {
