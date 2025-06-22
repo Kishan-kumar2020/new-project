@@ -1,11 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { removeUser } from "../utils/slices/userSlice";
-import { removeFeed } from "../utils/slices/feedSlice";
-import { removeRequests } from "../utils/slices/requestSlice";
+
 import { BASE_URL } from "../utils/constants";
-import { removeConnections } from "../utils/slices/connectionSlice";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user);
@@ -25,11 +22,8 @@ const Navbar = () => {
           withCredentials: true,
         }
       );
+      dispatch({ type: "RESET_APP" });
       navigate("/login", { replace: true });
-      dispatch(removeUser());
-      dispatch(removeFeed());
-      dispatch(removeRequests());
-      dispatch(removeConnections());
     } catch (err) {
       console.log(err);
     }
