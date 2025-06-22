@@ -54,6 +54,7 @@ const Login = () => {
           setIsSignUp(false);
           setError("");
           setMessage(data.message);
+          navigate("/profile", { replace: true });
         }
       } else {
         setError(data.message || "unexpected Error");

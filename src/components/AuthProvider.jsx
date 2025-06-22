@@ -5,6 +5,7 @@ import axios from "axios";
 
 import { addUser } from "../utils/slices/userSlice";
 import { useRequests } from "../utils/api/hooks/useRequests";
+import { useConnections } from "../utils/api/hooks/useConnections";
 import { BASE_URL } from "../utils/constants";
 
 const AuthProvider = ({ children }) => {
@@ -12,6 +13,7 @@ const AuthProvider = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loadRequests } = useRequests();
+  const { loadConnections } = useConnections();
 
   useEffect(() => {
     const init = async () => {
@@ -22,7 +24,6 @@ const AuthProvider = ({ children }) => {
             withCredentials: true,
           });
           dispatch(addUser(res.data.user));
-          await loadRequests();
         }
       } catch (err) {
         console.log(err);
@@ -34,6 +35,17 @@ const AuthProvider = ({ children }) => {
 
     init();
   }, []);
+
+  useEffect(() => {
+    const fetchUserRelatedData = async () => {
+      if (user && user._id) {
+        await loadRequests();
+        await loadConnections();
+      }
+    };
+
+    fetchUserRelatedData();
+  }, [user, loadRequests, loadConnections]);
 
   return children;
 };

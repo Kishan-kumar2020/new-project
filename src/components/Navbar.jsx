@@ -7,6 +7,7 @@ import { BASE_URL } from "../utils/constants";
 const Navbar = () => {
   const user = useSelector((state) => state.user);
   const requestsRecieved = useSelector((state) => state.requests);
+  const getconnections = useSelector((state) => state.connections);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -65,7 +66,14 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/connections">Connections</Link>
+                  <Link to="/connections">
+                    Connections
+                    {getconnections && (
+                      <span className="badge text-[0.7875rem]">
+                        {getconnections.length}
+                      </span>
+                    )}
+                  </Link>
                 </li>
                 <li>
                   <Link to="/requests">

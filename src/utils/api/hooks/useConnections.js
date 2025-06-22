@@ -1,18 +1,18 @@
 import { useDispatch } from "react-redux";
-import { getRequests } from "../../slices/requestSlice";
+import { addConnections } from "../../slices/connectionSlice";
 import axios from "axios";
 
 import { BASE_URL } from "../../constants";
 
-export const useRequests = () => {
+export const useConnections = () => {
   const dispatch = useDispatch();
-
-  const loadRequests = async () => {
+  
+  const loadConnections = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}request/received`, {
+      const res = await axios.get(`${BASE_URL}request/connections`, {
         withCredentials: true,
       });
-      dispatch(getRequests(res.data.requests));
+      dispatch(addConnections(res.data?.connections || []));
     } catch (err) {
       console.log(err);
       console.error(
@@ -22,5 +22,5 @@ export const useRequests = () => {
     }
   };
 
-  return {loadRequests};
+  return { loadConnections };
 };
