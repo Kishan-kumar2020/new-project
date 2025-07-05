@@ -1,18 +1,35 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchReceivedRequestsAction } from "../apiActions/receivedRequestsAction";
+
+const initialState = {
+  receivedRequests: null,
+  count: 0,
+};
 
 const requestSlice = createSlice({
-    name: 'requests',
-    initialState: null,
-    reducers: {
-        getRequests: (state, action) => {
-            return action.payload;
-        },
-        removeRequests: (state, action) => {
-            return null;
-        },
+  name: "requests",
+  initialState,
+  reducers: {
+    getRequests: (state, action) => {
+      state.receivedRequests = action.payload;
     },
+    getReceivedRequestsCount: (state, action) => {
+      state.count = state.receivedRequests?.length || 0;
+    },
+    removeRequests: (state) => {
+      state.receivedRequests = null;
+      state.count = 0;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchReceivedRequestsAction.fulfilled, (state, action) => {
+      state.receivedRequests = action.payload;
+      state.count = action.payload?.length || 0;
+    });
+  },
 });
 
-export const { getRequests, removeRequests } = requestSlice.actions;
+export const { getRequests, getReceivedRequestsCount, removeRequests } =
+  requestSlice.actions;
 
 export default requestSlice.reducer;

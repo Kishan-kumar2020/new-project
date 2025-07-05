@@ -3,11 +3,17 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { BASE_URL } from "../utils/constants";
+import { useSendRequests } from "../utils/apiHooks/useSendRequests";
+import { useConnections } from "../utils/apiHooks/useConnections";
+import { useReceivedRequests } from "../utils/apiHooks/useReceivedRequests";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user);
   const requestsRecieved = useSelector((state) => state.requests);
   const getconnections = useSelector((state) => state.connections);
+  const { count: sendRequestsCount } = useSendRequests();
+  const { count: connectionsCount } = useConnections();
+  const {count: requestsRecievedCount} = useReceivedRequests();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -34,7 +40,7 @@ const Navbar = () => {
     <header>
       <div className="navbar bg-base-100 shadow-sm">
         <div className="flex-1">
-          <Link to="/feed" className="btn btn-ghost text-xl">
+          <Link to={user ? "/feed" : '/login'} className="btn btn-ghost text-xl">
             DevTinder-Web
           </Link>
         </div>
@@ -68,21 +74,25 @@ const Navbar = () => {
                 <li>
                   <Link to="/connections">
                     Connections
-                    {getconnections && (
-                      <span className="badge text-[0.7875rem]">
-                        {getconnections.length}
-                      </span>
-                    )}
+                    <span className="badge text-[0.7875rem]">
+                      {connectionsCount}
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/sendrequests">
+                    Send Requests
+                    <span className="badge text-[0.7875rem]">
+                      {sendRequestsCount}
+                    </span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/requests">
                     Requests
-                    {requestsRecieved && (
-                      <span className="badge text-[0.7875rem]">
-                        {requestsRecieved.length}
-                      </span>
-                    )}
+                    <span className="badge text-[0.7875rem]">
+                      {requestsRecievedCount}
+                    </span>
                   </Link>
                 </li>
                 <li>

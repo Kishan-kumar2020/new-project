@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { addUser } from "../utils/slices/userSlice";
-import { useRequests } from "../utils/api/hooks/useRequests";
+import { useReceivedRequests } from "../utils/apiHooks/useReceivedRequests";
 import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
@@ -25,30 +25,28 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loadRequests } = useRequests();
-
+  
   const { name, email, photoURL, about, age, gender, password } = form;
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
-
+  
   const handleAuth = async () => {
     const url = isSignUp ? "signup" : "login";
     const payload = isSignUp ? form : { email: email, password: password };
-
+    
     try {
       const { data, status } = await axios.post(
         `${BASE_URL}auth/${url}`,
         payload,
         { withCredentials: true }
       );
-
+      
       if (status === 200 || status === 201) {
         if (!isSignUp) {
           dispatch(addUser(data.user));
-          await loadRequests();
           navigate("/feed", { replace: true });
         } else {
           setIsSignUp(false);

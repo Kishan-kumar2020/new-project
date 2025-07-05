@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import NotFound from "./components/NotFound";
 import Profile from "./components/Profile";
 import Requests from "./components/Requests";
+import SendRequests from "./components/SendRequests";
 import appStore from "./utils/appStore";
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/feed" element={<Feed />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/connections" element={<Connections />} />
+                <Route path="/sendrequests" element={<SendRequests />} />
                 <Route path="/requests" element={<Requests />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
